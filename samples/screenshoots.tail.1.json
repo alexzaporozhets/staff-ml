@@ -1,0 +1,27 @@
+{
+  "_id":{
+    "user_id":400436,
+    "uuid":"985AA560-93D1-40BF-A553-4F1A833A6AAD"
+  },
+  "task":12231255,
+  "date":{
+    "$date":"2017-02-14T15:23:21.000Z"
+  },
+  "project_id":"-1",
+  "mousemovements":0.0,
+  "keystrokes":0.0,
+  "since_last":463001.0,
+  "type":"screenshot",
+  "blurred":false,
+  "thumbnail":1,
+  "files":[
+    "looolooo_777_@hotmail.com_scr_20170214182321704.jpg"
+  ],
+  "files_order":[
+    "looolooo_777_@hotmail.com_scr_20170214182321704.jpg"
+  ],
+  "app_info":{
+    "process":"silah",
+    "window":"Silah | v2.3.47.12 | وقت الشركة: 6:23 PM"
+  }
+}

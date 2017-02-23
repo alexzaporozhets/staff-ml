@@ -1,0 +1,19 @@
+{
+  "_id":{
+    "user_id":475055,
+    "uuid":"4748C065-0E13-48E5-B163-5B63DA900131"
+  },
+  "task":9666465,
+  "date":{
+    "$date":"2016-02-15T18:25:18.000Z"
+  },
+  "project_id":"226278",
+  "mousemovements":382.0,
+  "keystrokes":724.0,
+  "since_last":360001.0,
+  "type":"screenshot",
+  "blurred":false,
+  "files":[
+    "zhymon@websolutionsmd.com_scr_20160215132518813.jpg"
+  ]
+}
