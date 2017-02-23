@@ -4,7 +4,10 @@ let stream = require('stream');
 let MongoClient = require('mongodb').MongoClient;
 
 const DEBUG = false;
-const userIds = {};
+const config = {
+  resultCollection: 'test100'
+};
+let userIds = {};
 
 // remove user_id form the data
 function removeUserId (data){
@@ -81,7 +84,7 @@ function importUsers() {
   for (let prop in userIds) {
     if (DEBUG) console.log("obj." + prop + " = " + userIds[prop]);
     // insert record
-    result.push(db.collection('timeline').insert(
+    result.push(db.collection(config.resultCollection).insert(
       {"_id": parseInt(prop), "reason": userIds[prop]['reason'], "date": userIds[prop]['date']}
     ));
   }
@@ -119,7 +122,7 @@ function importScreenshots() {
           updateTimeline['$addToSet']['timeline.daysBeforeLeave_' + daysBeforeLeave + '.screenshots'] = removeUserId(data);
 
           // update record
-          result.push(global.db.collection('timeline').update({_id: parseInt(userId)}, updateTimeline));
+          result.push(global.db.collection(config.resultCollection).update({_id: parseInt(userId)}, updateTimeline));
         }
       }
     });
@@ -159,7 +162,7 @@ function importTimeuse() {
         updateTimeline['$set']['timeline.daysBeforeLeave_' + daysBeforeLeave + '.activity'] = removeUserId(data);
 
         // update record
-        result.push(global.db.collection('timeline').update({_id: parseInt(userId)}, updateTimeline));
+        result.push(global.db.collection(config.resultCollection).update({_id: parseInt(userId)}, updateTimeline));
       }
     });
 
@@ -183,7 +186,7 @@ MongoClient.connect('mongodb://127.0.0.1:27017/staff').then(function (db) {
   global.db = db;
 
   // remove the previous data
-  db.collection('timeline').remove({})
+  db.collection(config.resultCollection).remove({})
     .then(importUsers)
     .then(importTimeuse)
     .then(importScreenshots)
