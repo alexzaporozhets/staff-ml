@@ -5,8 +5,9 @@ let MongoClient = require('mongodb').MongoClient;
 
 const DEBUG = false;
 const config = {
-  resultCollection: 'test100'
+  targetCollection: 'deletedUsers'
 };
+
 let userIds = {};
 
 // remove user_id form the data
@@ -84,7 +85,7 @@ function importUsers() {
   for (let prop in userIds) {
     if (DEBUG) console.log("obj." + prop + " = " + userIds[prop]);
     // insert record
-    result.push(db.collection(config.resultCollection).insert(
+    result.push(db.collection(config.targetCollection).insert(
       {"_id": parseInt(prop), "reason": userIds[prop]['reason'], "date": userIds[prop]['date']}
     ));
   }
@@ -102,7 +103,8 @@ function importScreenshots() {
     let outstream = new stream;
     let rl = readline.createInterface(instream, outstream);
 
-    let result = [];
+    let lastUpdateOperation;
+    let counter = 0;
 
     rl.on('line', function (line) {
       // process line here
@@ -118,19 +120,20 @@ function importScreenshots() {
           // calcuate amount of days before a user deletion
           let daysBeforeLeave = daysBetween(data['date'], userIds[userId]['date']);
 
-          let updateTimeline = {'$addToSet': {}};
+          let updateTimeline = {"$addToSet": {}, "$max": { "maxScreenshotsDate": data['date'] }};
           updateTimeline['$addToSet']['timeline.daysBeforeLeave_' + daysBeforeLeave + '.screenshots'] = removeUserId(data);
 
           // update record
-          result.push(global.db.collection(config.resultCollection).update({_id: parseInt(userId)}, updateTimeline));
+          lastUpdateOperation = global.db.collection(config.targetCollection).update({_id: parseInt(userId)}, updateTimeline);
+          counter++;
         }
       }
     });
 
     rl.on('close', function () {
       // do something on finish here
-      console.log('[Import screenshots] Done:', result.length);
-      Promise.all(result).then(resolve);
+      console.log('[Import screenshots] Done:', counter);
+      lastUpdateOperation.then(resolve);
     });
   });
 }
@@ -158,11 +161,11 @@ function importTimeuse() {
         // calcuate amount of days before a user deletion
         let daysBeforeLeave = daysBetween(data['date'], userIds[userId]['date']);
 
-        let updateTimeline = {'$set': {}};
+        let updateTimeline = {'$set': {}, "$max": { "maxActivityDate": data['date'] } };
         updateTimeline['$set']['timeline.daysBeforeLeave_' + daysBeforeLeave + '.activity'] = removeUserId(data);
 
         // update record
-        result.push(global.db.collection(config.resultCollection).update({_id: parseInt(userId)}, updateTimeline));
+        result.push(global.db.collection(config.targetCollection).update({_id: parseInt(userId)}, updateTimeline));
       }
     });
 
@@ -186,7 +189,7 @@ MongoClient.connect('mongodb://127.0.0.1:27017/staff').then(function (db) {
   global.db = db;
 
   // remove the previous data
-  db.collection(config.resultCollection).remove({})
+  db.collection(config.targetCollection).remove({})
     .then(importUsers)
     .then(importTimeuse)
     .then(importScreenshots)
@@ -195,4 +198,3 @@ MongoClient.connect('mongodb://127.0.0.1:27017/staff').then(function (db) {
       console.log(error); // Error: Not Found
     });
 });
-
