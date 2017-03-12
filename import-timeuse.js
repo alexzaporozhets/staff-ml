@@ -95,7 +95,7 @@ mysql.createConnection({
       ['apps', 'websites'].forEach(key => {
         for (let prop in data[key]) {
           connection.execute(
-            'INSERT INTO `timeuse_daily` VALUES (user_id, date, app, website, time) VALUES(?,?,?,?,?)',
+            'INSERT INTO `timeuse_daily` (user_id, date, app, website, time) VALUES(?,?,?,?,?)',
             [data.user_id, data.date, (key == 'apps') ? prop : null, (key == 'websites') ? prop : null, data[key][prop]]
           ).catch(error => {
             console.log(error); // Error: Not Found
