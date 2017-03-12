@@ -106,7 +106,7 @@ mysql.createConnection({
       });
       result++;
 
-      return connection.query('INSERT INTO `timeuse_daily` (user_id, date, app, website, time) VALUES ?', [values]);
+      lastUpdateOperation = connection.query('INSERT INTO `timeuse_daily` (user_id, date, app, website, time) VALUES ?', [values]);
 
     }
   });
@@ -114,7 +114,7 @@ mysql.createConnection({
   rl.on('close', function () {
     // do something on finish here
     console.log('[Import timeuse] Done:', result, 'days');
-    connection.end().then(process.exit());
+    lastUpdateOperation.then(connection.end().then(process.exit()));
   });
 
 });
