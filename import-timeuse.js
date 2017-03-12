@@ -105,7 +105,7 @@ mysql.createConnection({
         }
       });
 
-      connection.query('INSERT INTO `timeuse_daily` (user_id, date, app, website, time) VALUES ?', [values]).then(console.log).catch(console.log);
+      return connection.query('INSERT INTO `timeuse_daily` (user_id, date, app, website, time) VALUES ?', [values]);
 
     }
   });
