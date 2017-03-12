@@ -5,31 +5,10 @@ let stream = require('stream');
 // get the client
 let mysql = require('mysql');
 
-// remove user_id form the data
-function removeUserId(data) {
-  delete data['user_id'];
-  return data;
-}
-
-function daysBetween(first, second) {
-
-  // Copy date parts of the timestamps, discarding the time parts.
-  var one = new Date(first.getFullYear(), first.getMonth(), first.getDate());
-  var two = new Date(second.getFullYear(), second.getMonth(), second.getDate());
-
-  // Do the math.
-  var millisecondsPerDay = 1000 * 60 * 60 * 24;
-  var millisBetween = two.getTime() - one.getTime();
-  var days = millisBetween / millisecondsPerDay;
-
-  // Round down.
-  return Math.floor(days);
-}
-
 function normalizeTimeuseData(data) {
 
   let result = {
-    'user_id': (typeof data['_id']['user'] === 'object') ? data['_id']['user']['$numberLong'] : data['_id']['user'],
+    'user_id': parseInt((typeof data['_id']['user'] === 'object') ? data['_id']['user']['$numberLong'] : data['_id']['user']),
     'date': new Date(data['_id']['date']['$date']),
     'apps': {},
     'websites': {}
@@ -63,7 +42,7 @@ function sleepFor(sleepDuration) {
   }
 }
 
-const DEBUG = true;
+const DEBUG = false;
 
 const config = {
   'leaveLogsPath': 'leave-logs.json',
@@ -109,7 +88,7 @@ rl.on('line', function (line) {
     connection.query('INSERT INTO `timeuse_daily` (user_id, date, app, website, time) VALUES ?', [values], function (error, results, fields) {
       if (error) throw error;
       // Neat!
-      console.log('done');
+      if (DEBUG) console.log('INSERT:', values);
       succeedOps++;
     });
 
