@@ -31,6 +31,8 @@ function normalizeTimeuseData(data) {
   let result = {
     'user_id': (typeof data['_id']['user'] === 'object') ? data['_id']['user']['$numberLong'] : data['_id']['user'],
     'date': new Date(data['_id']['date']['$date']),
+    'apps': {},
+    'websites': {}
   };
 
   // remove mongodb types
@@ -40,9 +42,7 @@ function normalizeTimeuseData(data) {
       for (let prop in data[key]) {
         data[key][prop].forEach(row => {
           // "t":{ "$numberLong":"143"} OR "t":30
-          row['t'] = parseInt((typeof row['t'] === 'object') ? row['t']['$numberLong'] : row['t']);
-          // remove the timestamp field
-          if ('timestamp' in row) delete row['timestamp'];
+          result[key][row['r']] = parseInt((typeof row['t'] === 'object') ? row['t']['$numberLong'] : row['t']);
         });
       }
     }
