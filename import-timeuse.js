@@ -111,7 +111,7 @@ rl.on('line', function (line) {
         if (error) throw error;
         // Neat!
         console.log('done');
-        // resolve();
+        resolve(results);
       });
 
     });
@@ -122,5 +122,5 @@ rl.on('line', function (line) {
 rl.on('close', function () {
   // do something on finish here
   console.log('[Import timeuse] Done:', result, 'days');
-  // lastUpdateOperation.then(process.exit());
+  lastUpdateOperation.then(process.exit());
 });
