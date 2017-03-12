@@ -100,13 +100,11 @@ mysql.createConnection({
       // remove mongodb types
       ['apps', 'websites'].forEach(key => {
         for (let prop in data[key]) {
-          connection.execute(
+          let execute = connection.execute(
             'INSERT INTO `timeuse_daily` (user_id, date, app, website, time) VALUES(?,?,?,?,?)',
             [data.user_id, data.date, (key == 'apps') ? prop : null, (key == 'websites') ? prop : null, data[key][prop]]
-          ).then(([rows, fields]) => console.log(rows, fields))
-            .catch(error => {
-              console.log(error); // Error: Not Found
-            });
+          );
+          console.log(execute);
         }
       });
       sleepFor(15000);
