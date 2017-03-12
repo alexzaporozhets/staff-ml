@@ -114,6 +114,7 @@ mysql.createConnection({
         }
       });
       sleepFor(150000);
+      connection.end();
       process.exit();
     }
   });
