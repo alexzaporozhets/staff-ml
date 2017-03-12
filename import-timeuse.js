@@ -110,7 +110,7 @@ rl.on('line', function (line) {
       if (error) throw error;
       // Neat!
       console.log('done');
-      // succeedOps++;
+      succeedOps++;
     });
 
   }
