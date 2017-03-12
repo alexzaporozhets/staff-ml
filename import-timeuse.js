@@ -67,7 +67,13 @@ const config = {
 };
 
 // create the connection
-mysql.createConnection({ host: 'localhost', user: 'root', password: 'staff', database: 'timedoctor'}).then((connection) => {
+mysql.createConnection({
+  host: 'localhost',
+  user: 'root',
+  password: 'staff',
+  database: 'timedoctor'
+}).then((connection) => {
+
   console.log('[Import timeuse] Started...');
 
   let instream = fs.createReadStream(config.timeusePath);
@@ -89,14 +95,14 @@ mysql.createConnection({ host: 'localhost', user: 'root', password: 'staff', dat
       ['apps', 'websites'].forEach(key => {
         for (let prop in data[key]) {
           connection.execute(
-            'INSERT INTO `timeuse_daily` VALUES (user_id, date, app, website, time) WHERE VALUES(?,?,?,?,?) ',
-            [data.user_id, data.date, (key == 'apps') ? prop : null, (key == 'websites') ? prop : null, data[key][prop]],
-            function (err, results, fields) {
-              console.log(results); // results contains rows returned by server
-              console.log(fields); // fields contains extra meta data about results, if available
-            });
+            'INSERT INTO `timeuse_daily` VALUES (user_id, date, app, website, time) VALUES(?,?,?,?,?) ',
+            [data.user_id, data.date, (key == 'apps') ? prop : null, (key == 'websites') ? prop : null, data[key][prop]]
+          ).catch(error => {
+            console.log(error); // Error: Not Found
+          });
         }
       });
+      process.exit();
     }
   });
 
