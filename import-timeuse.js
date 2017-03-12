@@ -57,9 +57,10 @@ function normalizeTimeuseData(data) {
   return result;
 }
 
-function sleepFor( sleepDuration ){
+function sleepFor(sleepDuration) {
   var now = new Date().getTime();
-  while(new Date().getTime() < now + sleepDuration){ /* do nothing */ }
+  while (new Date().getTime() < now + sleepDuration) { /* do nothing */
+  }
 }
 
 const DEBUG = true;
@@ -102,9 +103,10 @@ mysql.createConnection({
           connection.execute(
             'INSERT INTO `timeuse_daily` (user_id, date, app, website, time) VALUES(?,?,?,?,?)',
             [data.user_id, data.date, (key == 'apps') ? prop : null, (key == 'websites') ? prop : null, data[key][prop]]
-          ).catch(error => {
-            console.log(error); // Error: Not Found
-          });
+          ).then(([rows, fields]) => console.log(rows, fields))
+            .catch(error => {
+              console.log(error); // Error: Not Found
+            });
         }
       });
       sleepFor(15000);
