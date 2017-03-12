@@ -82,9 +82,24 @@ mysql.createConnection({ host: 'localhost', user: 'root', password: 'staff', dat
     if (line.indexOf('"$date":{"$numberLong"') === -1) {
       // process line here
       let data = normalizeTimeuseData(JSON.parse(line));
-      let userId = data['user_id'];
 
       if (DEBUG) console.log(data);
+
+      // remove mongodb types
+      ['apps', 'websites'].forEach(key => {
+        // loop
+        for (let prop in data[key]) {
+
+          connection.execute(
+            'INSERT INTO `timeuse_daily` VALUES (user_id, date, app, website, time) WHERE VALUES(?,?,?,?,?) ',
+            [data.user_id, data.date, (key == 'apps') ? prop : null, (key == 'websites') ? prop : null, data[key][prop]],
+            function (err, results, fields) {
+              console.log(results); // results contains rows returned by server
+              console.log(fields); // fields contains extra meta data about results, if available
+            });
+        }
+      });
+      process.exit();
     }
   });
 
