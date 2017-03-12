@@ -102,6 +102,7 @@ mysql.createConnection({
           });
         }
       });
+      process.exit();
     }
   });
 
