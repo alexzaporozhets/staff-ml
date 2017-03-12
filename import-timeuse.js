@@ -87,7 +87,7 @@ let outstream = new stream;
 let rl = readline.createInterface(instream, outstream);
 
 let result = 0;
-let lastUpdateOperation;
+let succeedOps = 0;
 
 rl.on('line', function (line) {
 
@@ -106,14 +106,11 @@ rl.on('line', function (line) {
       }
     });
     result++;
-    lastUpdateOperation = new Promise((resolve, reject) => {
-      connection.query('INSERT INTO `timeuse_daily` (user_id, date, app, website, time) VALUES ?', [values], function (error, results, fields) {
-        if (error) throw error;
-        // Neat!
-        console.log('done');
-        resolve(results);
-      });
-
+    connection.query('INSERT INTO `timeuse_daily` (user_id, date, app, website, time) VALUES ?', [values], function (error, results, fields) {
+      if (error) throw error;
+      // Neat!
+      console.log('done');
+      succeedOps++;
     });
 
   }
@@ -121,6 +118,9 @@ rl.on('line', function (line) {
 
 rl.on('close', function () {
   // do something on finish here
+  while (succeedOps != result){
+    console.log('[Import timeuse] Done:', succeedOps, '/', result, 'days');
+    sleepFor(1000);
+  }
   console.log('[Import timeuse] Done:', result, 'days');
-  lastUpdateOperation.then(process.exit());
 });
