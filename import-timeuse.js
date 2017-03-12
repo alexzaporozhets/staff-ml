@@ -46,8 +46,6 @@ function normalizeTimeuseData(data) {
         });
       }
     }
-    //
-    result[key] = data[key];
   });
 
 
