@@ -122,7 +122,7 @@ rl.on('close', function () {
       console.log('[Import timeuse] In-progress:', succeedOps, '/', result, 'days');
     } else {
       console.log('[Import timeuse] Done:', result, 'days');
-      proccess.exit();
+      process.exit();
     }
   }, 500);
 });
