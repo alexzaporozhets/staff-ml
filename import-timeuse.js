@@ -106,9 +106,7 @@ mysql.createConnection({
           ).then(console.log).catch(console.log);
         }
       });
-      sleepFor(150000);
       // connection.end();
-      process.exit();
     }
   });
 
