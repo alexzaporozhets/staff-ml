@@ -107,11 +107,10 @@ rl.on('line', function (line) {
     });
     result++;
 
-    rl.pause();
     connection.query('INSERT INTO `timeuse_daily` (user_id, date, app, website, time) VALUES ?', [values], function (error, results, fields) {
       if (error) throw error;
       // Neat!
-      rl.resume();
+      consol.log('done');
     });
 
   }
