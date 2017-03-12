@@ -96,17 +96,17 @@ mysql.createConnection({
       let data = normalizeTimeuseData(JSON.parse(line));
 
       if (DEBUG) console.log(data);
+      let values = [];
 
       // remove mongodb types
       ['apps', 'websites'].forEach(key => {
         for (let prop in data[key]) {
-          connection.query(mysql.format(
-            'INSERT INTO `timeuse_daily` (user_id, date, app, website, time) VALUES(?,?,?,?,?)',
-            [data.user_id, data.date, (key == 'apps') ? prop : null, (key == 'websites') ? prop : null, data[key][prop]])
-          ).then(console.log).catch(console.log);
+          values.push([data.user_id, data.date, (key == 'apps') ? prop : null, (key == 'websites') ? prop : null, data[key][prop]]);
         }
       });
-      // connection.end();
+
+      connection.query('INSERT INTO `timeuse_daily` (user_id, date, app, website, time) VALUES ?', [values]).then(console.log).catch(console.log);
+
     }
   });
 
