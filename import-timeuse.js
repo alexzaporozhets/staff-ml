@@ -3,7 +3,7 @@ let readline = require('readline');
 let stream = require('stream');
 
 // get the client
-let mysql = require('promise-mysql');
+let mysql = require('mysql');
 
 // remove user_id form the data
 function removeUserId(data) {
@@ -73,49 +73,53 @@ const config = {
 };
 
 // create the connection
-mysql.createConnection({
+let connection = mysql.createConnection({
   host: 'localhost',
   user: 'root',
   password: 'staff',
   database: 'timedoctor'
-}).then((connection) => {
-
-  console.log('[Import timeuse] Started...');
-
-  let instream = fs.createReadStream(config.timeusePath);
-  let outstream = new stream;
-  let rl = readline.createInterface(instream, outstream);
-
-  let result = 0;
-
-  rl.on('line', function (line) {
-
-    // process line here
-    if (line.indexOf('"$date":{"$numberLong"') === -1) {
-      // process line here
-      let data = normalizeTimeuseData(JSON.parse(line));
-
-      if (DEBUG) console.log(data);
-      let values = [];
-
-      // remove mongodb types
-      ['apps', 'websites'].forEach(key => {
-        for (let prop in data[key]) {
-          values.push([data.user_id, data.date, (key == 'apps') ? prop : null, (key == 'websites') ? prop : null, data[key][prop]]);
-        }
-      });
-      result++;
-
-      lastUpdateOperation = connection.query('INSERT INTO `timeuse_daily` (user_id, date, app, website, time) VALUES ?', [values]);
-
-    }
-  });
-
-  rl.on('close', function () {
-    // do something on finish here
-    console.log('[Import timeuse] Done:', result, 'days');
-    lastUpdateOperation.then(connection.end().then(process.exit()));
-  });
-
 });
 
+console.log('[Import timeuse] Started...');
+
+let instream = fs.createReadStream(config.timeusePath);
+let outstream = new stream;
+let rl = readline.createInterface(instream, outstream);
+
+let result = 0;
+let lastUpdateOperation;
+
+rl.on('line', function (line) {
+
+  // process line here
+  if (line.indexOf('"$date":{"$numberLong"') === -1) {
+    // process line here
+    let data = normalizeTimeuseData(JSON.parse(line));
+
+    if (DEBUG) console.log(data);
+    let values = [];
+
+    // remove mongodb types
+    ['apps', 'websites'].forEach(key => {
+      for (let prop in data[key]) {
+        values.push([data.user_id, data.date, (key == 'apps') ? prop : null, (key == 'websites') ? prop : null, data[key][prop]]);
+      }
+    });
+    result++;
+
+    lastUpdateOperation = new Promise((resolve, reject) => {
+      connection.query('INSERT INTO `timeuse_daily` (user_id, date, app, website, time) VALUES ?', [values], function (error, results, fields) {
+        if (error) throw error;
+        // Neat!
+        resolve();
+      });
+    });
+
+  }
+});
+
+rl.on('close', function () {
+  // do something on finish here
+  console.log('[Import timeuse] Done:', result, 'days');
+  lastUpdateOperation.then(connection.end().then(process.exit()));
+});
