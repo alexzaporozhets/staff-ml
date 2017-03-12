@@ -87,8 +87,8 @@ mysql.createConnection({ host: 'localhost', user: 'root', password: 'staff', dat
 
       // remove mongodb types
       ['apps', 'websites'].forEach(key => {
-        // loop
         for (let prop in data[key]) {
+          if (DEBUG) console.log(prop, data[key][prop]);
 
           connection.execute(
             'INSERT INTO `timeuse_daily` VALUES (user_id, date, app, website, time) WHERE VALUES(?,?,?,?,?) ',
