@@ -104,13 +104,7 @@ mysql.createConnection({
             'INSERT INTO `timeuse_daily` (user_id, date, app, website, time) VALUES(?,?,?,?,?)',
             [data.user_id, data.date, (key == 'apps') ? prop : null, (key == 'websites') ? prop : null, data[key][prop]]
           ).then(console.log).catch(console.log);
-
-          connection.query(
-            'INSERT INTO `timeuse_daily` (user_id, date, app, website, time) VALUES(?,?,?,?,?)',
-            [data.user_id, data.date, (key == 'apps') ? prop : null, (key == 'websites') ? prop : null, data[key][prop]]
-          ).then(console.log).catch(console.log);
-          console.log(prop, data[key][prop]);
-
+          break;
         }
       });
       sleepFor(150000);
