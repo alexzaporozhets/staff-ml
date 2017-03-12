@@ -6,11 +6,10 @@ let MongoClient = require('mongodb').MongoClient;
 const DEBUG = false;
 
 const config = {
-  targetCollection: 'deletedUsers'
+  'targetCollection': 'deletedUsers',
   'leaveLogsPath': 'leave-logs.json',
   'screenshotsPath': '/storage/screenshots.json',
   'timeusePath': '/storage/timeuse.daily.json',
-  'resultCollection': 'test100'
 };
 
 let userIds = {};
