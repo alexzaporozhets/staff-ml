@@ -93,6 +93,7 @@ rl.on('line', function (line) {
     });
 
   }
+  sleepFor(20);
 });
 
 rl.on('close', function () {
