@@ -1,0 +1,22 @@
+{
+  "name": "staff-ml",
+  "version": "1.0.0",
+  "description": "",
+  "main": "extract-data.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alexzaporozhets/staff-ml.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/alexzaporozhets/staff-ml/issues"
+  },
+  "homepage": "https://github.com/alexzaporozhets/staff-ml#readme",
+  "dependencies": {
+    "mysql2": "^1.2.0"
+  }
+}
