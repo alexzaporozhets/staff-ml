@@ -112,7 +112,6 @@ rl.on('line', function (line) {
       if (error) throw error;
       // Neat!
       rl.resume();
-      resolve();
     });
 
   }
