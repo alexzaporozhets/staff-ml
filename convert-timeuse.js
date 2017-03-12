@@ -64,6 +64,7 @@ console.log('[Import timeuse] Started...');
 let instream = fs.createReadStream(config.timeusePath);
 let outstream = new stream;
 let rl = readline.createInterface(instream, outstream);
+var wl = fs.createWriteStream('timeuse_daily.sql', {flags: 'a'});
 
 let result = 0;
 let succeedOps = 0;
@@ -85,16 +86,11 @@ rl.on('line', function (line) {
       }
     });
     result++;
-    console.log(mysql.format('INSERT INTO `timeuse_daily` (user_id, date, app, website, time) VALUES ?', [values]));
-    process.exit();
 
-    connection.query('INSERT INTO `timeuse_daily` (user_id, date, app, website, time) VALUES ?', [values], function (error, results, fields) {
-      if (error) throw error;
-      // Neat!
-      if (DEBUG) console.log('INSERT:', values);
-      succeedOps++;
+    let data = mysql.format("INSERT INTO `timeuse_daily` (user_id, date, app, website, time) VALUES ?;\n", [values]);
+    wl.write(data, function() {
+      succeedOps++;// Now the data has been written.
     });
-
   }
 });
 
