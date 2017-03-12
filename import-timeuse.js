@@ -68,7 +68,7 @@ const DEBUG = true;
 const config = {
   'leaveLogsPath': 'leave-logs.json',
   'screenshotsPath': '/storage/screenshots.json',
-  'timeusePath': '/storage/timeuse.daily.json',
+  'timeusePath': '/storage/timeuse.daily-20-lines.json',
   'resultCollection': 'test100'
 };
 
