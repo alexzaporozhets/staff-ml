@@ -87,8 +87,8 @@ rl.on('line', function (line) {
     });
     result++;
 
-    let data = mysql.format("INSERT INTO `timeuse_daily` (user_id, date, app, website, time) VALUES ?;\n", [values]);
-    wl.write(data, function() {
+    let sql = mysql.format("INSERT INTO `timeuse_daily` (user_id, date, app, website, time) VALUES ?;\n", [values]);
+    wl.write(sql, function() {
       succeedOps++;// Now the data has been written.
     });
   }
