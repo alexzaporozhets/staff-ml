@@ -86,7 +86,7 @@ mysql.createConnection({
   let outstream = new stream;
   let rl = readline.createInterface(instream, outstream);
 
-  let result = [];
+  let result = 0;
 
   rl.on('line', function (line) {
 
@@ -104,6 +104,7 @@ mysql.createConnection({
           values.push([data.user_id, data.date, (key == 'apps') ? prop : null, (key == 'websites') ? prop : null, data[key][prop]]);
         }
       });
+      result++;
 
       return connection.query('INSERT INTO `timeuse_daily` (user_id, date, app, website, time) VALUES ?', [values]);
 
@@ -112,7 +113,8 @@ mysql.createConnection({
 
   rl.on('close', function () {
     // do something on finish here
-    console.log('[Import timeuse] Done:', result.length);
+    console.log('[Import timeuse] Done:', result.length, 'days');
+    connection.end().then(process.exit());
   });
 
 });
