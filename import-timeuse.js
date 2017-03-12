@@ -118,9 +118,9 @@ rl.on('line', function (line) {
 
 rl.on('close', function () {
   // do something on finish here
-  while (succeedOps != result){
-    console.log('[Import timeuse] In-progress:', succeedOps, '/', result, 'days');
-    sleepFor(1000);
-  }
+  // while (succeedOps != result){
+  //   console.log('[Import timeuse] In-progress:', succeedOps, '/', result, 'days');
+  //   sleepFor(1000);
+  // }
   console.log('[Import timeuse] Done:', result, 'days');
 });
