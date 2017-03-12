@@ -44,9 +44,9 @@ function normalizeTimeuseData(data) {
           // "t":{ "$numberLong":"143"} OR "t":30
           let time = parseInt((typeof row['t'] === 'object') ? row['t']['$numberLong'] : row['t']);
           if (row['r'] in result[key]) {
-            result[key][row['r']] = time;
-          } else {
             result[key][row['r']] = result[key][row['r']] + time;
+          } else {
+            result[key][row['r']] = time;
           }
         });
       }
