@@ -105,11 +105,7 @@ mysql.createConnection({
             [data.user_id, data.date, (key == 'apps') ? prop : null, (key == 'websites') ? prop : null, data[key][prop]]
           );
 
-          execute.then((result) => {
-            console.log(result);
-          }).catch((err) => {
-            console.log(err); // any of connection time or query time errors from above
-          });
+          execute.then(console.log).catch(console.log);
 
         }
       });
