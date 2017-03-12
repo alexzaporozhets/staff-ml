@@ -88,8 +88,6 @@ mysql.createConnection({ host: 'localhost', user: 'root', password: 'staff', dat
       // remove mongodb types
       ['apps', 'websites'].forEach(key => {
         for (let prop in data[key]) {
-          if (DEBUG) console.log(prop, data[key][prop]);
-
           connection.execute(
             'INSERT INTO `timeuse_daily` VALUES (user_id, date, app, website, time) WHERE VALUES(?,?,?,?,?) ',
             [data.user_id, data.date, (key == 'apps') ? prop : null, (key == 'websites') ? prop : null, data[key][prop]],
@@ -99,7 +97,6 @@ mysql.createConnection({ host: 'localhost', user: 'root', password: 'staff', dat
             });
         }
       });
-      process.exit();
     }
   });
 
