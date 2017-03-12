@@ -3,7 +3,7 @@ let readline = require('readline');
 let stream = require('stream');
 
 // get the client
-let mysql = require('mysql2/promise');
+let mysql = require(''promise-mysql');
 
 // remove user_id form the data
 function removeUserId(data) {
@@ -100,11 +100,10 @@ mysql.createConnection({
       // remove mongodb types
       ['apps', 'websites'].forEach(key => {
         for (let prop in data[key]) {
-          connection.query(
+          connection.query(mysql.format(
             'INSERT INTO `timeuse_daily` (user_id, date, app, website, time) VALUES(?,?,?,?,?)',
-            [data.user_id, data.date, (key == 'apps') ? prop : null, (key == 'websites') ? prop : null, data[key][prop]]
+            [data.user_id, data.date, (key == 'apps') ? prop : null, (key == 'websites') ? prop : null, data[key][prop]])
           ).then(console.log).catch(console.log);
-          break;
         }
       });
       sleepFor(150000);
