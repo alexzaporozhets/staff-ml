@@ -107,7 +107,7 @@ mysql.createConnection({
           });
         }
       });
-      sleepFor(5000);
+      sleepFor(15000);
       process.exit();
     }
   });
