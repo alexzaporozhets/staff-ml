@@ -113,7 +113,7 @@ mysql.createConnection({
 
   rl.on('close', function () {
     // do something on finish here
-    console.log('[Import timeuse] Done:', result.length, 'days');
+    console.log('[Import timeuse] Done:', result, 'days');
     connection.end().then(process.exit());
   });
 
