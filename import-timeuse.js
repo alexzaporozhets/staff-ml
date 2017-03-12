@@ -42,7 +42,12 @@ function normalizeTimeuseData(data) {
       for (let prop in data[key]) {
         data[key][prop].forEach(row => {
           // "t":{ "$numberLong":"143"} OR "t":30
-          result[key][row['r']] = parseInt((typeof row['t'] === 'object') ? row['t']['$numberLong'] : row['t']);
+          let time = parseInt((typeof row['t'] === 'object') ? row['t']['$numberLong'] : row['t']);
+          if (row['r'] in result[key]) {
+            result[key][row['r']] = time;
+          } else {
+            result[key][row['r']] = result[key][row['r']] + time;
+          }
         });
       }
     }
