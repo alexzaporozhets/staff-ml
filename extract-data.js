@@ -4,8 +4,13 @@ let stream = require('stream');
 let MongoClient = require('mongodb').MongoClient;
 
 const DEBUG = false;
+
 const config = {
   targetCollection: 'deletedUsers'
+  'leaveLogsPath': 'leave-logs.json',
+  'screenshotsPath': '/storage/screenshots.json',
+  'timeusePath': '/storage/timeuse.daily.json',
+  'resultCollection': 'test100'
 };
 
 let userIds = {};
@@ -99,7 +104,7 @@ function importScreenshots() {
 
   return new Promise((resolve, reject) => {
 
-    let instream = fs.createReadStream('/storage/screenshots.json');
+    let instream = fs.createReadStream(config.screenshotsPath);
     let outstream = new stream;
     let rl = readline.createInterface(instream, outstream);
 
@@ -143,7 +148,7 @@ function importTimeuse() {
 
   return new Promise((resolve, reject) => {
 
-    let instream = fs.createReadStream('/storage/timeuse.daily.json');
+    let instream = fs.createReadStream(config.timeusePath);
     let outstream = new stream;
     let rl = readline.createInterface(instream, outstream);
 
@@ -178,7 +183,7 @@ function importTimeuse() {
 }
 
 // load info about Quit/Fired users
-JSON.parse(fs.readFileSync('leave-logs.json')).forEach((d) => userIds[d.user_id] = {
+JSON.parse(fs.readFileSync(config.leaveLogsPath)).forEach((d) => userIds[d.user_id] = {
   "reason": d.reason,
   "date": new Date(d.leave_date)
 });
@@ -198,3 +203,4 @@ MongoClient.connect('mongodb://127.0.0.1:27017/staff').then(function (db) {
       console.log(error); // Error: Not Found
     });
 });
+
