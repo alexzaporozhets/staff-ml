@@ -120,5 +120,5 @@ rl.on('line', function (line) {
 rl.on('close', function () {
   // do something on finish here
   console.log('[Import timeuse] Done:', result, 'days');
-  lastUpdateOperation.then(connection.end());
+  connection.end();
 });
