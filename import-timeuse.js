@@ -3,7 +3,7 @@ let readline = require('readline');
 let stream = require('stream');
 
 // get the client
-let mysql = require(''promise-mysql');
+let mysql = require('promise-mysql');
 
 // remove user_id form the data
 function removeUserId(data) {
