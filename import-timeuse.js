@@ -57,6 +57,11 @@ function normalizeTimeuseData(data) {
   return result;
 }
 
+function sleepFor( sleepDuration ){
+  var now = new Date().getTime();
+  while(new Date().getTime() < now + sleepDuration){ /* do nothing */ }
+}
+
 const DEBUG = true;
 
 const config = {
@@ -102,6 +107,7 @@ mysql.createConnection({
           });
         }
       });
+      sleepFor(5000);
       process.exit();
     }
   });
@@ -109,7 +115,6 @@ mysql.createConnection({
   rl.on('close', function () {
     // do something on finish here
     console.log('[Import timeuse] Done:', result.length);
-    Promise.all(result).then(resolve);
   });
 
 });
