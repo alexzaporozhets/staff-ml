@@ -92,6 +92,28 @@ SHOW VARIABLES LIKE 'max_allowed%';
 
 
 
+CREATE TABLE `export_leave_20_days` SELECT
+  l.user_id,
+  l.reason,
+  l.leave_date,
+  SUM(c.time) / 3600 AS `total_hours_worklog`,
+  COUNT(*)           AS total_days_worklog,
+  (SELECT COUNT(DISTINCT `date`) FROM timeuse_daily t WHERE l.user_id = t.user_id) as total_days_timeuse,
+  GROUP_CONCAT(DATEDIFF(l.leave_date, c.`date`), ':', ROUND(c.time / 3600, 2) ORDER BY c.`date` DESC separator ',') as working_time_per_day_in_hours,
+  CONCAT_TIMEUSE(l.user_id, l.leave_date) as activity_per_day_in_seconds
+
+FROM users_leave_log l
+  JOIN cache_day_work_time c ON (l.user_id = c.user_id)
+WHERE reason IN ('They Quit', 'They were fired') AND l.user_id NOT IN (400436, 454039, 516111, 534967, 544255, 538289,555423, 543515)
+GROUP BY l.user_id
+HAVING total_days_worklog > 20
+ORDER BY `total_days_worklog` DESC;
+
+SELECT COUNT(*) FROM export_working WHERE 1;
+DELETE FROM export_working WHERE user_id IN (SELECT user_id FROM users_leave_log);
+
+
+
 # SELECT c.user_id, SUM(c.time) / 3600 as `total_hours`, COUNT(*) as total_days
 # FROM cache_day_work_time c
 # WHERE 1
