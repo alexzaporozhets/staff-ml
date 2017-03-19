@@ -119,4 +119,36 @@ DELETE FROM export_working WHERE user_id IN (SELECT user_id FROM users_leave_log
 # WHERE 1
 # GROUP BY c.user_id
 # HAVING total_days > 60
-# ORDER BY `total_days` DESC
+# ORDER BY `total_days` DESC;
+
+
+SET @max_date = '2017-03-10';
+CREATE TABLE `export_working` SELECT
+  c.user_id,
+  MAX(c.date) as `last_activity_date`,
+  SUM(c.time) / 3600 AS `total_hours_worklog`,
+  COUNT(*)           AS total_days_worklog,
+  (SELECT COUNT(DISTINCT `date`) FROM timeuse_daily t WHERE c.user_id = t.user_id) as total_days_timeuse,
+  GROUP_CONCAT(DATEDIFF(DATE('2017-03-10'), c.`date`), ':', ROUND(c.time / 3600, 2) ORDER BY c.`date` DESC separator ',') as working_time_per_day_in_hours,
+  CONCAT_TIMEUSE(c.user_id, DATE('2017-03-10')) as activity_per_day_in_seconds
+
+FROM cache_day_work_time c
+WHERE 1
+GROUP BY c.user_id
+HAVING total_days_worklog > 60
+ORDER BY `last_activity_date` DESC
+LIMIT 3000;
+
+SELECT * FROM export_working ORDER BY RAND() LIMIT 1;
+DROP TABLE export_working;
+
+DROP TABLE timedoctor.`export_working`;
+
+SELECT COUNT(DISTINCT website) FROM timeuse_daily;
+
+
+
+echo 'select * from `export_working`;'| sudo mysql --defaults-file=/etc/mysql/debian.cnf --delimiter=';' timedoctor > export_working.csv
+
+
+echo 'select * from `export-leave-20-days` LIMIT 1;'| sudo mysql --defaults-file=/etc/mysql/debian.cnf --delimiter=';' timedoctor
