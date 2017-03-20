@@ -106,7 +106,7 @@ FROM users_leave_log l
   JOIN cache_day_work_time c ON (l.user_id = c.user_id)
 WHERE reason IN ('They Quit', 'They were fired') AND l.user_id NOT IN (400436, 454039, 516111, 534967, 544255, 538289,555423, 543515)
 GROUP BY l.user_id
-HAVING total_days_worklog > 20
+HAVING total_days_worklog >= 20 AND total_days_timeuse >= 20
 ORDER BY `total_days_worklog` DESC;
 
 SELECT COUNT(*) FROM export_working WHERE 1;
@@ -135,7 +135,9 @@ CREATE TABLE `export_working` SELECT
 FROM cache_day_work_time c
 WHERE 1
 GROUP BY c.user_id
-HAVING total_days_worklog > 60
+HAVING total_days_worklog >= 60 AND total_days_timeuse >= 60
+-- ignore users with activity in the future
+AND last_activity_date <= DATE('2017-03-10')
 ORDER BY `last_activity_date` DESC
 LIMIT 3000;
 
